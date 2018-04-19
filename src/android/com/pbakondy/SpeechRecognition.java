@@ -115,7 +115,8 @@ public class SpeechRecognition extends CordovaPlugin {
         mLastPartialResults = new JSONArray();
         Boolean showPartial = args.optBoolean(3, false);
         Boolean showPopup = args.optBoolean(4, true);
-        startListening(lang, matches, prompt,showPartial, showPopup);
+        Boolean preferOffline = args.optBoolean(5, false);
+        startListening(lang, matches, prompt,showPartial, showPopup, preferOffline);
 
         return true;
       }
@@ -161,7 +162,7 @@ public class SpeechRecognition extends CordovaPlugin {
     return SpeechRecognizer.isRecognitionAvailable(context);
   }
 
-  private void startListening(String language, int matches, String prompt, final Boolean showPartial, Boolean showPopup) {
+  private void startListening(String language, int matches, String prompt, final Boolean showPartial, Boolean showPopup, Boolean preferOffline) {
     Log.d(LOG_TAG, "startListening() language: " + language + ", matches: " + matches + ", prompt: " + prompt + ", showPartial: " + showPartial + ", showPopup: " + showPopup);
 
     final Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
@@ -171,6 +172,7 @@ public class SpeechRecognition extends CordovaPlugin {
     intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, matches);
     intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
             activity.getPackageName());
+    intent.putExtra(RecognizerIntent.EXTRA_PREFER_OFFLINE, preferOffline);
     intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, showPartial);
     intent.putExtra("android.speech.extra.DICTATION_MODE", showPartial);
 
